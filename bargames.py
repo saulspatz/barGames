@@ -9,11 +9,11 @@ Requirements:
     If the number of teams is odd, all but one team plays in each round
     The number of times two teams meet should be minimized
 '''
-from dancingLinks import solve, highWater
+from dancingLinks import solve
 from collections import namedtuple, defaultdict
 
 Match = namedtuple("Match", "team1 team2 sport".split())
-teams = 10  # number of teams
+teams = 6  # number of teams
 plays=2       # number of times each team plays each game
 
 teams = ['T%d'%t for t in range(teams) ]
@@ -100,13 +100,41 @@ def makeTournament(matches, rounds):
     for m in matches:
         for t, r in enumerate(rounds):
             if m in r: columns[m].add(t)
-    tournament = [rounds[t] for t in solve(columns, rows, set(), 1 )]
+    indices = [t for t in solve(columns, rows, set(), 1 )][0]
+    tournament = [rounds[t] for t in indices]
     return tournament
 
+def auditTournament(matches, tournament):
+    answer = True
+    played = {m for rnd in tournament for m in rnd }
+    if played != set(matches):
+        answer = False
+        for m in matches:
+            if m not in played:
+                print(m, 'was not played')
+    return answer
+                
 matches = makeMatches(teams, sports, plays)
-if auditMatches(teams, sports, plays, matches):
-    print('Matches passed audit')
+if not auditMatches(teams, sports, plays, matches):
+    exit()
+print('Matches passed audit')
+
 rounds = makeRounds(teams, sports, matches)
-if auditRounds(teams, matches, rounds):
-    print('Rounds passed audit')
+if not auditRounds(teams, matches, rounds):
+    exit()
+print('Rounds passed audit')
+    
 tournament = makeTournament(matches, rounds)
+if not tournament:
+    from dancingLinks import highWater
+    print('No luck.  Deepest level', highWater)
+if not auditTournament(matches, tournament):
+    exit()
+
+rnd = 1
+for round in tournament:
+    print("Round", rnd)
+    for match in round:
+        print('  ', match.team1, 'vs', match.team2, 'at', match.sport)
+    rnd += 1
+
