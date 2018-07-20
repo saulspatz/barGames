@@ -24,6 +24,8 @@ meaningful names to the variables, and expanding the comments, is to add the lit
 wrapper to specify the maximumnumber of solutions to generate, and to extend it 
 to handle secondary columns.
 '''
+global highWater
+highWater = 0
 
 def solve(Cols,  Rows, SecondaryIDs=set(), limit = 0):
     '''
@@ -37,6 +39,7 @@ def solve(Cols,  Rows, SecondaryIDs=set(), limit = 0):
         if limit == 0: raise StopIteration
         
 def solver(Cols, Rows, SecondaryIDs, solution=[]):
+    global highWater
     live=[col for col in Cols if col not in SecondaryIDs] 
     if not live:
         yield list(solution)
@@ -44,6 +47,8 @@ def solver(Cols, Rows, SecondaryIDs, solution=[]):
         col = min(live, key = lambda col: len(Cols[col]))        # hardest primary column to cover is best for branching
         for row in list(Cols[col]):                                          # for each row with a 1 in the current column
             solution.append(row)                                            # tentatively add it to the solution
+            level=len(solution)
+            highWater = max(highWater, level)
             columns = select(Cols, Rows, row)                        
             for soln in solver(Cols, Rows, SecondaryIDs, solution):
                 yield soln

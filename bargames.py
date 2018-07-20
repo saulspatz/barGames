@@ -9,11 +9,11 @@ Requirements:
     If the number of teams is odd, all but one team plays in each round
     The number of times two teams meet should be minimized
 '''
-from dancingLinks import solve
+from dancingLinks import solve, highWater
 from collections import namedtuple, defaultdict
 
 Match = namedtuple("Match", "team1 team2 sport".split())
-teams = 12  # number of teams
+teams = 10  # number of teams
 plays=2       # number of times each team plays each game
 
 teams = ['T%d'%t for t in range(teams) ]
