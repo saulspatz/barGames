@@ -2,14 +2,16 @@
 # n queens problem 
 # test generalized exact cover with dancing links
 
-from dancingLinks import solve
-n = 4
+from algorithmX import solve
+n = 14
 # Each column and each row has exactly one queen
 # Each diagonal has at most one queen
 # 2n primary and 4n-2 secondary columns
 
 # From Dancing Links paper
-solutionCounts = {4:2, 5:10, 6:4, 7:40, 8:92, 9:352, 10:724}
+solutionCounts = {4:2, 5:10, 6:4, 7:40, 8:92, 9:352, 10:724, 11:2680, 
+                           12:14200,  13:73712, 14:365596, 15:2279184, 
+                           16:14772512, 17:95815104,  18:666090624 }
 
 def makeRows(n):
     # There is one row for each cell.  
@@ -64,13 +66,11 @@ rows = makeRows(n)
 primary = makePrimary(n)
 secondary = makeSecondary(n)
 if audit(rows, primary, secondary):
-    print("passed audit")
+    print("input passed audit")
 primary.update(secondary)
 secondary = secondary.keys()
-solutions = [s for s in solve(primary, rows, secondary)]
-try:
-    assert len(solutions) == solutionCounts[n]
-except AssertionError:
-    print("actual %d expected %d"%(len(solutions), solutionCounts[n]))
-else:
-    print(solutions)
+solutionCount = 0
+for s in solve(primary, rows, secondary, 0):
+    solutionCount += 1
+if solutionCount != solutionCounts[n]:
+    print("actual %d expected %d"%(solutionCount, solutionCounts[n]))

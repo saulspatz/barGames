@@ -1,4 +1,4 @@
-# dancingLinks.pRows
+# algorithmX.py
 # Retrieved from http://www.cs.mcgill.ca/~aassaf9/pRowsthon/algorithm_Cols.html
 # on 18 December 2014
 # Link no longer works
@@ -36,13 +36,14 @@ def solve(Cols,  Rows, SecondaryIDs=set(), limit = 0):
     for soln in solver(Cols, Rows, SecondaryIDs):
         yield soln
         limit -= 1
-        if limit == 0: raise StopIteration
+        if limit == 0: return
         
-def solver(Cols, Rows, SecondaryIDs, solution=[]):
+def solver(Cols, Rows, SecondaryIDs, solution=None):
     global highWater
+    if solution is None: solution = [ ]
     live=[col for col in Cols if col not in SecondaryIDs] 
     if not live:
-        yield list(solution)
+        yield tuple(solution)   #freeze the answer to avoid later mutation
     else:
         col = min(live, key = lambda col: len(Cols[col]))        # hardest primary column to cover is best for branching
         for row in list(Cols[col]):                                          # for each row with a 1 in the current column

@@ -9,7 +9,7 @@ Requirements:
     If the number of teams is odd, all but one team plays in each round
     The number of times two teams meet should be minimized
 '''
-from dancingLinks import solve
+from algorithmX import solve
 from collections import namedtuple, defaultdict
 
 Match = namedtuple("Match", "team1 team2 sport".split())
